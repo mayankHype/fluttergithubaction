@@ -1,0 +1,43 @@
+name: Build and Create PR
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+           channel: 'stable'
+           run: flutter --version
+         
+
+
+        # - name: Set up flutter
+        #   uses: subosito/flutter-action@v2
+        #   with:
+        #     channel: 'stable' # or: 'beta', 'dev' or 'master'
+        #     - run: flutter --version
+    
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Flutter app
+        run: flutter build apk --release
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.PUSH}}
+          title: "Merge dev into qa"
+          body: "Automated pull request from dev to qa."
+          branch: qa

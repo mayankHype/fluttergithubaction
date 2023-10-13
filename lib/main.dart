@@ -1,6 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttergithubaction/const/ApiKeys.dart';
+import 'package:fluttergithubaction/firebase_options.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
+  await Intercom.instance.initialize(ApiKeys.appIdDev, iosApiKey: ApiKeys.iOSAppIdDev, androidApiKey:ApiKeys.androidAppIdDev);
   runApp(const MyApp());
 }
 
@@ -35,11 +44,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
+  void _incrementCounter() async{
+  await Intercom.instance.loginUnidentifiedUser();
 
-      _counter++;
-    });
+  // await Intercom.instance.displayArticle('8469054');
+  await Intercom.instance.displayMessenger();
+
+  
+  
   }
 
   @override
@@ -55,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Hey i am groot',
             ),
             Text(
               '$_counter',
